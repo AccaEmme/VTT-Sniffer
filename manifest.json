@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "VTT Sniffer - AccaEmme",
+  "version": "1.0",
+  "description": "Analizza il traffico web e rileva file VTT a cura di Acca Emme",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "downloads",
+    "storage",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/16x16-8bit.ico",
+      "48": "icons/48x48-8bit.ico",
+      "128": "icons/128x128-8bit.ico"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

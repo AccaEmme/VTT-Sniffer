@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VTT Traffic Analyzer - AccaEmme</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 5px 0;
+    }
+    a {
+      text-decoration: none;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <h1>VTT Traffic Analyzer - AccaEmme</h1>
+  <p>File VTT rilevati:</p>
+  <ul id="vtt-list"></ul>
+  <p id="no-files" style="display: none;">Nessun elemento trovato</p>
+  <button id="start-sniffer">Start Sniffer</button>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      browser.storage.local.get({ vttFiles: [] }, function(result) {
+        const vttFiles = result.vttFiles;
+        const list = document.getElementById('vtt-list');
+        const noFilesMessage = document.getElementById('no-files');
+        if (vttFiles.length === 0) {
+          noFilesMessage.style.display = 'block';
+        } else {
+          noFilesMessage.style.display = 'none';
+          vttFiles.forEach(url => {
+            const listItem = document.createElement('li');
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'X';
+            removeButton.style.marginRight = '10px';
+            removeButton.onclick = function() {
+              list.removeChild(listItem);
+              browser.storage.local.get({ vttFiles: [] }, function(result) {
+                const updatedVttFiles = result.vttFiles.filter(item => item !== url);
+                browser.storage.local.set({ vttFiles: updatedVttFiles });
+                if (updatedVttFiles.length === 0) {
+                  noFilesMessage.style.display = 'block';
+                }
+              });
+            };
+            listItem.appendChild(removeButton);
+
+            const urlLink = document.createElement('a');
+            urlLink.href = url;
+            urlLink.textContent = url;
+            urlLink.target = '_blank';
+            listItem.appendChild(urlLink);
+
+            list.appendChild(listItem);
+          });
+        }
+      });
+
+      document.getElementById('start-sniffer').addEventListener('click', function() {
+        browser.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+          browser.tabs.sendMessage(tabs[0].id, { startSniffer: true });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
