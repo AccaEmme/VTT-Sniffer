@@ -1,3 +1,5 @@
+![GitHub](https://github.com/AccaEmme/VTT-Sniffer)
+
 - README Language: [🇬🇧  English](#eng) | [🇮🇹 Italiano](#ita)
 - [Screenshots](#screenshots)
 
